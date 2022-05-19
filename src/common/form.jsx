@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
 import Input from "./input";
+import { getGenres } from "../services/fakeGenreService";
 
 class Form extends Component {
   state = {
@@ -50,6 +51,21 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
+  handleSelectedGenre = ({currentTarget: selectedGenre}) => {
+    console.log(selectedGenre);
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(selectedGenre);
+    if (errorMessage) errors[selectedGenre.name] = errorMessage;
+    else delete errors[selectedGenre.name];
+
+    const data = {...this.state.data}
+    data[selectedGenre.value] = selectedGenre.value
+
+    this.setState({data, errors})
+
+    console.log(selectedGenre.value);
+  };
+
   renderButton = (label) => {
     return (
       <button disabled={this.validate()} className="btn btn-primary">
@@ -69,6 +85,26 @@ class Form extends Component {
         onChange={this.handleChange}
         error={errors[name]}
       />
+    );
+  }
+
+  renderList(name, label, error) {
+    const genres = getGenres();
+    return (
+      <div className="form-group">
+        <label htmlFor={name}>{label}</label>
+        <select
+          onChange={this.handleSelectedGenre}
+          className="form-control"
+          id={name}
+          name={name}
+        >
+          {genres.map((e) => (
+            <option key={e._id}> {e.name}</option>
+          ))}
+        </select>
+        {error && <div className="alert alert-danger">{error}</div>}
+      </div>
     );
   }
 }

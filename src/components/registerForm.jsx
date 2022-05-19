@@ -27,7 +27,6 @@ class RegisterForm extends Form {
     console.log("Submitted");
   };
 
-
   render() {
     return (
       <div>

@@ -1,7 +1,6 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "../common/form";
-import Input from "../common/input";
 
 class LoginForm extends Form {
   // ! A state can't be null or undefined
