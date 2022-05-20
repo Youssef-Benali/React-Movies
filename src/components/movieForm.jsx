@@ -1,6 +1,7 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "../common/form";
+import { saveMovie } from "../services/fakeMovieService";
 
 {
   /* <Link to="/movies">
@@ -38,10 +39,18 @@ class MovieForm extends Form {
       .max(10),
   };
 
+  doSubmit = () => {
+    // Call the server
+    const movies = {...this.state.data};
+    saveMovie(movies);
+    this.props.history.push('/movies')
+    console.log(movies);
+  }
+
   render() {
     return (
       <>
-        <h1>Movie Form </h1>;
+        <h1>Movie Form </h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("title", "Title")}
           {this.renderList("genres", "Genres")}

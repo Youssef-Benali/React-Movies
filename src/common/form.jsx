@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Joi from "joi-browser";
+import Joi, { log } from "joi-browser";
 import Input from "./input";
 import { getGenres } from "../services/fakeGenreService";
 
@@ -51,20 +51,24 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
-  handleSelectedGenre = ({currentTarget: selectedGenre}) => {
+  handleSelectedGenre = ({ currentTarget: selectedGenre }) => {
     console.log(selectedGenre);
     const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(selectedGenre);
     if (errorMessage) errors[selectedGenre.name] = errorMessage;
     else delete errors[selectedGenre.name];
 
-    const data = {...this.state.data}
-    data[selectedGenre.value] = selectedGenre.value
+    const data = { ...this.state.data };
+    data["genres"] = selectedGenre.value;
 
-    this.setState({data, errors})
+    this.setState({ data, errors });
 
     console.log(selectedGenre.value);
   };
+
+  handleMovieSave = (e) => {
+    console.log(e.currentTarget);
+  }
 
   renderButton = (label) => {
     return (
