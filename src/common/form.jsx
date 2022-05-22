@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import Joi, { log } from "joi-browser";
+import Joi from "joi-browser";
 import Input from "./input";
-import { getGenres } from "../services/fakeGenreService";
+import { getGenres} from "../services/fakeGenreService";
 
 class Form extends Component {
   state = {
@@ -14,8 +14,8 @@ class Form extends Component {
     const options = { abortEarly: false };
     const { error } = Joi.validate(this.state.data, this.schema, options);
     if (!error) return null;
-
-    const errors = {};
+    
+    const errors = {};  
     for (let item of error.details) errors[item.path[0]] = item.message;
     return errors;
   };
@@ -52,23 +52,20 @@ class Form extends Component {
   };
 
   handleSelectedGenre = ({ currentTarget: selectedGenre }) => {
-    console.log(selectedGenre);
     const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(selectedGenre);
     if (errorMessage) errors[selectedGenre.name] = errorMessage;
     else delete errors[selectedGenre.name];
 
     const data = { ...this.state.data };
-    data["genres"] = selectedGenre.value;
+    const genres = getGenres()
+    const genre = genres.filter(g => g.name === selectedGenre.value)
+    data["genreId"] = genre[0]._id;
 
     this.setState({ data, errors });
 
     console.log(selectedGenre.value);
   };
-
-  handleMovieSave = (e) => {
-    console.log(e.currentTarget);
-  }
 
   renderButton = (label) => {
     return (

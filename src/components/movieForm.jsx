@@ -2,6 +2,7 @@ import React from "react";
 import Joi from "joi-browser";
 import Form from "../common/form";
 import { saveMovie } from "../services/fakeMovieService";
+import { useHistory } from "react-router-dom";
 
 {
   /* <Link to="/movies">
@@ -13,9 +14,9 @@ class MovieForm extends Form {
   state = {
     data: {
       title: "",
-      genres: "",
-      stock: "",
-      rate: "",
+      genreId: "",
+      numberInStock: "",
+      dailyRentalRate: "",
     },
     errors: {},
   };
@@ -24,15 +25,15 @@ class MovieForm extends Form {
     title: Joi.string()
       .required()
       .label("Title"),
-    genres: Joi.string()
+    genreId: Joi.string()
       .required()
-      .label("Genres"),
-    stock: Joi.number()
+      .label("Genre"),
+    numberInStock: Joi.number()
       .required()
       .label("Stock")
       .min(0)
       .max(100),
-    rate: Joi.number()
+    dailyRentalRate: Joi.number()
       .required()
       .label("Rate")
       .min(0)
@@ -41,11 +42,11 @@ class MovieForm extends Form {
 
   doSubmit = () => {
     // Call the server
-    const movies = {...this.state.data};
+    const movies = { ...this.state.data };
     saveMovie(movies);
-    this.props.history.push('/movies')
+    this.props.history.push("/movies");
     console.log(movies);
-  }
+  };
 
   render() {
     return (
@@ -53,9 +54,9 @@ class MovieForm extends Form {
         <h1>Movie Form </h1>
         <form onSubmit={this.handleSubmit}>
           {this.renderInput("title", "Title")}
-          {this.renderList("genres", "Genres")}
-          {this.renderInput("stock", "Stock", "number")}
-          {this.renderInput("rate", "Rate", "number")}
+          {this.renderList("genreId", "Genre")}
+          {this.renderInput("numberInStock", "Stock", "number")}
+          {this.renderInput("dailyRentalRate", "Rate", "number")}
           {this.renderButton("Save")}
         </form>
       </>

@@ -12,10 +12,12 @@ class LoginForm extends Form {
   schema = {
     username: Joi.string()
       .required()
-      .label("Username"),
+      .label("Username")
+      .min(5),
     password: Joi.string()
       .required()
-      .label("Password"),
+      .label("Password")
+      .min(5),
   };
 
   // errors['username'] (if it was an array, find() method...)

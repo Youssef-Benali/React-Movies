@@ -80,7 +80,7 @@ class Movies extends Component {
       return <p className="pt-3 pb-1"> There are no movies in the database!</p>;
 
     const { totalCount, data: movies } = this.getPageDate();
-
+    console.log(this.state.movies)
     return (
       <>
         <section className="container">
