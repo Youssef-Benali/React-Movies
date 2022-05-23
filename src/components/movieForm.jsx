@@ -51,14 +51,16 @@ class MovieForm extends Form {
   render() {
     return (
       <>
-        <h1>Movie Form </h1>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput("title", "Title")}
-          {this.renderList("genreId", "Genre")}
-          {this.renderInput("numberInStock", "Stock", "number")}
-          {this.renderInput("dailyRentalRate", "Rate", "number")}
-          {this.renderButton("Save")}
-        </form>
+        <div style={{ margin: "1rem" }}>
+          <h1>Movie Form </h1>
+          <form onSubmit={this.handleSubmit}>
+            {this.renderInput("title", "Title")}
+            {this.renderList("genreId", "Genre")}
+            {this.renderInput("numberInStock", "Stock", "number")}
+            {this.renderInput("dailyRentalRate", "Rate", "number")}
+            {this.renderButton("Save")}
+          </form>
+        </div>
       </>
     );
   }

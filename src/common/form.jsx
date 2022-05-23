@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import Joi from "joi-browser";
+import Joi, { log } from "joi-browser";
 import Input from "./input";
-import { getGenres} from "../services/fakeGenreService";
+import { getGenres } from "../services/fakeGenreService";
+import { getMovie } from "../services/fakeMovieService";
 
 class Form extends Component {
   state = {
@@ -9,13 +10,24 @@ class Form extends Component {
     errors: {},
   };
 
+  componentDidMount() {
+  //   if (!this.props.match.params.id) return null;
+  //   const data = getMovie(this.props.match.params.id);
+      
+    
+
+  //   this.setState({data})
+  //   console.log(this.props.match.params.id);
+  //   console.log(data);
+  }
+
   validate = () => {
     // ! {abortEarly: false} prevent the default behavior that stop login errors when the first one get caught
     const options = { abortEarly: false };
     const { error } = Joi.validate(this.state.data, this.schema, options);
     if (!error) return null;
-    
-    const errors = {};  
+
+    const errors = {};
     for (let item of error.details) errors[item.path[0]] = item.message;
     return errors;
   };
@@ -58,8 +70,8 @@ class Form extends Component {
     else delete errors[selectedGenre.name];
 
     const data = { ...this.state.data };
-    const genres = getGenres()
-    const genre = genres.filter(g => g.name === selectedGenre.value)
+    const genres = getGenres();
+    const genre = genres.filter((g) => g.name === selectedGenre.value);
     data["genreId"] = genre[0]._id;
 
     this.setState({ data, errors });
