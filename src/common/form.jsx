@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Joi, { log } from "joi-browser";
+import Joi from "joi-browser";
 import Input from "./input";
 import { getGenres } from "../services/fakeGenreService";
 import { getMovie } from "../services/fakeMovieService";
@@ -11,14 +11,12 @@ class Form extends Component {
   };
 
   componentDidMount() {
-  //   if (!this.props.match.params.id) return null;
-  //   const data = getMovie(this.props.match.params.id);
-      
+    if (!this.props.match.params.id) return null;
+    const data = getMovie(this.props.match.params.id);
     
-
-  //   this.setState({data})
-  //   console.log(this.props.match.params.id);
-  //   console.log(data);
+    this.setState({ data });
+    // console.log(this.props.match.params.id);
+    console.log("form component", data);
   }
 
   validate = () => {
@@ -26,6 +24,7 @@ class Form extends Component {
     const options = { abortEarly: false };
     const { error } = Joi.validate(this.state.data, this.schema, options);
     if (!error) return null;
+    console.log("validate", error);
 
     const errors = {};
     for (let item of error.details) errors[item.path[0]] = item.message;
@@ -33,6 +32,7 @@ class Form extends Component {
   };
 
   validateProperty = ({ name, value }) => {
+    // console.log("validateProperty")
     // Computed properties
     const obj = { [name]: value };
     const schema = { [name]: this.schema[name] };
@@ -41,6 +41,7 @@ class Form extends Component {
   };
 
   handleSubmit = (e) => {
+    // console.log("handleSubmit");
     e.preventDefault();
 
     const errors = this.validate();
@@ -52,6 +53,8 @@ class Form extends Component {
   };
 
   handleChange = ({ currentTarget: input }) => {
+    // console.log("handleChange")
+    if (input === "") return null;
     const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(input);
     if (errorMessage) errors[input.name] = errorMessage;
@@ -64,6 +67,7 @@ class Form extends Component {
   };
 
   handleSelectedGenre = ({ currentTarget: selectedGenre }) => {
+    // console.log("handleSelectedGenre")
     const errors = { ...this.state.errors };
     const errorMessage = this.validateProperty(selectedGenre);
     if (errorMessage) errors[selectedGenre.name] = errorMessage;
@@ -71,8 +75,8 @@ class Form extends Component {
 
     const data = { ...this.state.data };
     const genres = getGenres();
-    const genre = genres.filter((g) => g.name === selectedGenre.value);
-    data["genreId"] = genre[0]._id;
+    const genre = genres.find((g) => g.name === selectedGenre.value);
+    data["genreId"] = genre._id;
 
     this.setState({ data, errors });
 

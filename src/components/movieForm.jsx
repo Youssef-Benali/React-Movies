@@ -2,7 +2,6 @@ import React from "react";
 import Joi from "joi-browser";
 import Form from "../common/form";
 import { saveMovie } from "../services/fakeMovieService";
-import { useHistory } from "react-router-dom";
 
 {
   /* <Link to="/movies">
@@ -38,7 +37,12 @@ class MovieForm extends Form {
       .label("Rate")
       .min(0)
       .max(10),
+    _id: Joi.string().optional(),
+    genre: Joi.object().optional(),
+    liked: Joi.boolean().optional(),
   };
+
+  
 
   doSubmit = () => {
     // Call the server
