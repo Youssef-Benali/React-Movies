@@ -3,17 +3,17 @@ import Joi from "joi-browser";
 import Form from "../common/form";
 import { saveMovie } from "../services/fakeMovieService";
 
-{
+
   /* <Link to="/movies">
         <button className="btn btn-primary" onClick={() => history.push('/movies') }>Save</button>
       </Link> */
-}
+
 
 class MovieForm extends Form {
   state = {
     data: {
       title: "",
-      genreId: "",
+      genre: "",
       numberInStock: "",
       dailyRentalRate: "",
     },
@@ -24,7 +24,7 @@ class MovieForm extends Form {
     title: Joi.string()
       .required()
       .label("Title"),
-    genreId: Joi.string()
+    genre: Joi.object()
       .required()
       .label("Genre"),
     numberInStock: Joi.number()
@@ -37,9 +37,8 @@ class MovieForm extends Form {
       .label("Rate")
       .min(0)
       .max(10),
-    _id: Joi.string().optional(),
-    genre: Joi.object().optional(),
-    liked: Joi.boolean().optional(),
+    _id: Joi.optional(),
+    liked: Joi.optional(),
   };
 
   
@@ -49,7 +48,6 @@ class MovieForm extends Form {
     const movies = { ...this.state.data };
     saveMovie(movies);
     this.props.history.push("/movies");
-    console.log(movies);
   };
 
   render() {
@@ -59,7 +57,7 @@ class MovieForm extends Form {
           <h1>Movie Form </h1>
           <form onSubmit={this.handleSubmit}>
             {this.renderInput("title", "Title")}
-            {this.renderList("genreId", "Genre")}
+            {this.renderList("genre", "Genre")}
             {this.renderInput("numberInStock", "Stock", "number")}
             {this.renderInput("dailyRentalRate", "Rate", "number")}
             {this.renderButton("Save")}

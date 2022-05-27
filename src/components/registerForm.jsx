@@ -24,7 +24,6 @@ class RegisterForm extends Form {
 
   doSubmit = () => {
     // Call the server
-    console.log("Submitted");
   };
 
   render() {

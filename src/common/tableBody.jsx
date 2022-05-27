@@ -5,15 +5,14 @@ class TableBody extends Component {
   renderCell = (item, column) => {
     if (column.content) return column.content(item);
 
-    {
+    
       /* I didn't use _.get because it doesn't work, 
               instead I've used a ternary operator to check if it's an object, 
               if so, it will render the only nested property we have 
               in the fake database  */
-    }
+    
 
     // if(item.title) return <Link to="/movies"> {item[column.path]} </Link>
-
       return typeof item[column.path] === "object"
         ? item.genre.name
         : item[column.path];
