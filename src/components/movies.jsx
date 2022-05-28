@@ -9,6 +9,7 @@ import { paginate } from "../utils/paginate";
 import Pagination from "../common/pagination";
 import ListGroup from "../common/listGroup";
 import MoviesTable from "./moviesTable";
+import SearchBar from "../common/searchBar";
 
 class Movies extends Component {
   state = {
@@ -16,7 +17,10 @@ class Movies extends Component {
     genres: [],
     pageSize: 4,
     currentPage: 1,
+    searchQuery: "",
+    selectedGenre: null,
     sortColumn: { path: "title", order: "asc" },
+    searchQuery: "",
   };
 
   // In component did mount, it's the perfect place to get data from the database
@@ -45,13 +49,33 @@ class Movies extends Component {
   };
 
   handleGenreSelect = (genre) => {
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({
+      selectedGenre: genre,
+      currentPage: 1,
+      searchQuery: "",
+      movies: getMovies(),
+    });
+  };
+
+  handleSearch = ({ currentTarget: search }) => {
+    // Clear selectedGenre
+    this.setState({ selectedGenre: null, searchQuery: search.value, currentPage: 1 });
+
+    // Search a movie
+    const movies = [...this.state.movies];
+    const filteredMovie = movies.filter((movie) =>
+      movie.title.toLowerCase().startsWith(search.value.toLowerCase())
+    );
+    if (filteredMovie.length === 0)
+      return alert("No movie finded in the database");
+
+    // Set movies
+    this.setState({ movies: filteredMovie });
   };
 
   handleSort = (sortColumn) => {
     this.setState({ sortColumn });
   };
-
   getPageDate = () => {
     const {
       pageSize,
@@ -92,17 +116,20 @@ class Movies extends Component {
               />
             </article>
             <article className="col">
-              <Link to="movies/new">
-                <button
-                  style={{ marginTop: "1rem" }}
-                  className="btn btn-primary"
-                >
-                  New Movie
-                </button>
+              <Link
+                style={{ marginTop: "1rem" }}
+                className="btn btn-primary"
+                to="/movies/new"
+              >
+                New Movie
               </Link>
               <p className="pt-3 pb-1">
                 Showing {totalCount} movies in the database.
               </p>
+              <SearchBar
+                searchQuery={this.state.searchQuery}
+                onSearch={this.handleSearch}
+              />
               <MoviesTable
                 movies={movies}
                 sortColumn={sortColumn}
