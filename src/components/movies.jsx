@@ -2,14 +2,19 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import _ from "lodash";
 
-import { getMovies } from "../services/fakeMovieService";
-import { getGenres } from "../services/fakeGenreService";
 import { paginate } from "../utils/paginate";
-
 import Pagination from "../common/pagination";
 import ListGroup from "../common/listGroup";
 import MoviesTable from "./moviesTable";
 import SearchBar from "../common/searchBar";
+
+// import { getMovies } from "../services/fakeMovieService";
+import { deleteMovie, getMovies } from "../services/movieService";
+
+// import { getGenres } from "../services/fakeGenreService";
+import { getGenres } from "../services/genreService";
+
+import {toast} from "react-toastify"
 
 class Movies extends Component {
   state = {
@@ -20,20 +25,31 @@ class Movies extends Component {
     searchQuery: "",
     selectedGenre: null,
     sortColumn: { path: "title", order: "asc" },
-    searchQuery: "",
   };
 
   // In component did mount, it's the perfect place to get data from the database
   // line 24: Adding an object with 2 keys before the entire table to be able to map the "All Genres" caterogy
-  componentDidMount() {
-    const genres = [{ name: "All Genres", _id: "" }, ...getGenres()];
+  async componentDidMount() {
+    const { data } = await getGenres();
+    const genres = [{ name: "All Genres", _id: "" }, ...data];
 
-    this.setState({ movies: getMovies(), genres });
+    const {data: movies} = await getMovies();
+    this.setState({ movies, genres });
   }
 
-  handleDelete = (movie) => {
-    const movies = this.state.movies.filter((m) => m._id !== movie._id);
+  handleDelete = async (movie) => {
+    const originalMovies = this.state.movies;
+
+    const movies = originalMovies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
+
+    try{
+      await deleteMovie(movie._id)
+
+    } catch(ex){
+      if(ex.response && ex.response.status === 404) toast.error('this movie has already been deleted.')
+      this.setState({movies: originalMovies})
+    }
   };
 
   handleLike = (movie) => {
@@ -59,7 +75,11 @@ class Movies extends Component {
 
   handleSearch = ({ currentTarget: search }) => {
     // Clear selectedGenre
-    this.setState({ selectedGenre: null, searchQuery: search.value, currentPage: 1 });
+    this.setState({
+      selectedGenre: null,
+      searchQuery: search.value,
+      currentPage: 1,
+    });
 
     // Search a movie
     const movies = [...this.state.movies];
@@ -97,6 +117,8 @@ class Movies extends Component {
   };
 
   render() {
+    // getGenresAxios()
+
     const { length: count } = this.state.movies;
     const { pageSize, currentPage, sortColumn } = this.state;
 
