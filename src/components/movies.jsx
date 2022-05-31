@@ -14,7 +14,7 @@ import { deleteMovie, getMovies } from "../services/movieService";
 // import { getGenres } from "../services/fakeGenreService";
 import { getGenres } from "../services/genreService";
 
-import {toast} from "react-toastify"
+import { toast } from "react-toastify";
 
 class Movies extends Component {
   state = {
@@ -33,7 +33,7 @@ class Movies extends Component {
     const { data } = await getGenres();
     const genres = [{ name: "All Genres", _id: "" }, ...data];
 
-    const {data: movies} = await getMovies();
+    const { data: movies } = await getMovies();
     this.setState({ movies, genres });
   }
 
@@ -43,12 +43,12 @@ class Movies extends Component {
     const movies = originalMovies.filter((m) => m._id !== movie._id);
     this.setState({ movies });
 
-    try{
-      await deleteMovie(movie._id)
-
-    } catch(ex){
-      if(ex.response && ex.response.status === 404) toast.error('this movie has already been deleted.')
-      this.setState({movies: originalMovies})
+    try {
+      await deleteMovie(movie._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        toast.error("this movie has already been deleted.");
+      this.setState({ movies: originalMovies });
     }
   };
 
@@ -64,12 +64,13 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   };
 
-  handleGenreSelect = (genre) => {
+  handleGenreSelect = async (genre) => {
+    const { data: movies } = await getMovies();
     this.setState({
       selectedGenre: genre,
       currentPage: 1,
       searchQuery: "",
-      movies: getMovies(),
+      movies,
     });
   };
 
@@ -104,6 +105,7 @@ class Movies extends Component {
       sortColumn,
       movies: allMovies,
     } = this.state;
+
     const filtered =
       selectedGenre && selectedGenre._id
         ? allMovies.filter((m) => m.genre._id === selectedGenre._id)
@@ -117,8 +119,6 @@ class Movies extends Component {
   };
 
   render() {
-    // getGenresAxios()
-
     const { length: count } = this.state.movies;
     const { pageSize, currentPage, sortColumn } = this.state;
 
