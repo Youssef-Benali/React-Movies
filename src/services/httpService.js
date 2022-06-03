@@ -1,7 +1,7 @@
 import axios from "axios";
-import logger from "./logService"
-import {toast} from "react-toastify"
-import auth from "../services/authService";
+import logger from "./logService";
+import { toast } from "react-toastify";
+
 /*
 * Interceptors can handle error and response and log them, in this case we only deal with
 * error object that's why we set null for the first paramater
@@ -16,8 +16,9 @@ import auth from "../services/authService";
 - Display a generic and friendly error message
 */
 
-// on each http request, we set the x auth token to the current user token
-axios.defaults.headers.common['x-auth-token'] = auth.getJwt()
+// On each http request, we set the x auth token to the current user token
+//  ! Bi-directional Dependencies
+axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
 
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
@@ -26,19 +27,27 @@ axios.interceptors.response.use(null, (error) => {
     error.response.status < 500;
 
   if (!expectedError) {
-    logger.log(error)
+    logger.log(error);
     toast("An unexpected error occured.");
   }
 
   return Promise.reject(error);
 });
 
+function setJwt(jwt){
+  axios.defaults.headers.common["x-auth-token"] = jwt;
+}
+
 export default {
   get: axios.get,
   post: axios.post,
   put: axios.put,
   delete: axios.delete,
+  setJwt
 };
+
+
+
 
 // axios.patch(apiEndPoint + "/" + post.id, {title: post.title});
 
