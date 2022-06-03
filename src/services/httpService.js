@@ -1,6 +1,7 @@
 import axios from "axios";
 import logger from "./logService"
 import {toast} from "react-toastify"
+import auth from "../services/authService";
 /*
 * Interceptors can handle error and response and log them, in this case we only deal with
 * error object that's why we set null for the first paramater
@@ -14,6 +15,10 @@ import {toast} from "react-toastify"
 - Log them
 - Display a generic and friendly error message
 */
+
+// on each http request, we set the x auth token to the current user token
+axios.defaults.headers.common['x-auth-token'] = auth.getJwt()
+
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
     error.response &&
