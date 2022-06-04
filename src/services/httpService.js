@@ -18,7 +18,7 @@ import { toast } from "react-toastify";
 
 // On each http request, we set the x auth token to the current user token
 //  ! Bi-directional Dependencies
-axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
+// axios.defaults.headers.common["x-auth-token"] = auth.getJwt();
 
 axios.interceptors.response.use(null, (error) => {
   const expectedError =
@@ -45,9 +45,6 @@ export default {
   delete: axios.delete,
   setJwt
 };
-
-
-
 
 // axios.patch(apiEndPoint + "/" + post.id, {title: post.title});
 
