@@ -121,7 +121,7 @@ class Movies extends Component {
   render() {
     const { length: count } = this.state.movies;
     const { pageSize, currentPage, sortColumn } = this.state;
-    const {user} = this.props;
+    const { user } = this.props;
 
     if (count === 0)
       return <p className="pt-3 pb-1"> There are no movies in the database!</p>;
@@ -139,13 +139,15 @@ class Movies extends Component {
               />
             </article>
             <article className="col">
-              {user && <Link
-                style={{ marginTop: "1rem" }}
-                className="btn btn-primary"
-                to="/movies/new"
-              >
-                New Movie
-              </Link>}
+              {user && (
+                <Link
+                  style={{ marginTop: "1rem" }}
+                  className="btn btn-primary"
+                  to="/movies/new"
+                >
+                  New Movie
+                </Link>
+              )}
               <p className="pt-3 pb-1">
                 Showing {totalCount} movies in the database.
               </p>
